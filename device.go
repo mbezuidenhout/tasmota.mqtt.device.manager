@@ -1,10 +1,26 @@
-package tasmota.mqtt.device.manager
+package tasmota
+
+import (
+	"fmt"
+
+	mqtt "github.com/eclipse/paho.mqtt.golang"
+)
 
 type Device struct {
-	name, ip string
+	Topic     string
+	topic     string
+	fullTopic string
 }
 
-func (d *Device) GetUptime() string {
-	uptime := d.name
-	return uptime
+// NewDevice will create a new Device
+func NewDevice(topic, fullTopic string) *Device {
+	o := &Device{
+		topic:     topic,
+		fullTopic: fullTopic,
+	}
+	return o
+}
+
+func (d *Device) MessageHandler(client mqtt.Client, msg mqtt.Message) {
+	fmt.Printf("%s: %s\n", msg.Topic(), msg.Payload())
 }

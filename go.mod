@@ -2,4 +2,8 @@ module github.com/mbezuidenhout/tasmota.mqtt.device.manager/v2
 
 go 1.17
 
-require github.com/mbezuidenhout/tasmota.mqtt.device.manager v0.0.0-20211213141233-b262af30cd01 // indirect
+require (
+	github.com/eclipse/paho.mqtt.golang v1.3.5 // indirect
+	github.com/gorilla/websocket v1.4.2 // indirect
+	golang.org/x/net v0.0.0-20200425230154-ff2c4b7c35a0 // indirect
+)
