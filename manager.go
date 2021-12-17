@@ -73,9 +73,7 @@ func (m *Manager) MessageHandler(client mqtt.Client, msg mqtt.Message) {
 			topic := getTopic(fullTopic, msg.Topic())
 			if _, ok = m.devices[topic]; !ok {
 				//m.devices[topic] = &Device{topic: topic, fullTopic: fullTopic}
-				m.devices[topic] = NewDevice(topic, fullTopic)
-				subscribeTopic := strings.Replace(strings.Replace(fullTopic, "%prefix%", "tele", 1), "%topic%", topic, 1) + "#"
-				m.MQTTclient.Subscribe(subscribeTopic, 1, m.devices[topic].MessageHandler)
+				m.devices[topic] = NewDevice(topic, fullTopic, m.MQTTclient)
 			}
 		}
 	}
