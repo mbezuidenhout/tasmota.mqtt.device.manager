@@ -9,11 +9,41 @@ import (
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/mbezuidenhout/tasmota.mqtt.device.manager/v2"
+	"gopkg.in/yaml.v3"
 )
 
+type Config struct {
+	Host     string `yaml:"host"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+}
+
+func NewConfig(configPath string) (*Config, error) {
+	config := &Config{}
+
+	file, err := os.Open(configPath)
+
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	d := yaml.NewDecoder(file)
+
+	if err := d.Decode(&config); err != nil {
+		return nil, err
+	}
+
+	return config, nil
+}
+
 func main() {
+	config, err := NewConfig("config.yml")
+	if err != nil {
+		return
+	}
 	mqttClientOptions := mqtt.NewClientOptions()
-	mqttClientOptions.SetUsername("root").SetPassword("$4!KPx^*K@5*2p").AddBroker("tcp://mqtt.lan:1883")
+	mqttClientOptions.SetUsername(config.Username).SetPassword(config.Password).AddBroker(config.Host)
 	mqttClientOptions.SetClientID("TMDM_DEV")
 
 	m := tasmota.NewManager(*mqttClientOptions)

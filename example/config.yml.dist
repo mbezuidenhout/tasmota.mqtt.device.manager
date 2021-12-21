@@ -1,0 +1,5 @@
+# config.yml
+
+host: tcp://mqtt.example.com:1883
+username: username
+password: password
