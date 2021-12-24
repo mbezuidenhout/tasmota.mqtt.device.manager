@@ -26,6 +26,7 @@ type Device struct {
 	mqttClient mqtt.Client
 	online     bool
 	StatusNet  statusNet `json:"StatusNET"`
+	Uptime     string    `json:"Uptime"`
 }
 
 // NewDevice will create a new Device
@@ -52,8 +53,8 @@ func (d *Device) MessageHandler(client mqtt.Client, msg mqtt.Message) {
 		} else {
 			d.online = false
 		}
-	} else if strings.HasSuffix(msg.Topic(), "STATUS5") {
-		d.decodeStatusNet(msg.Payload())
+	} else if strings.HasSuffix(msg.Topic(), "STATUS5") || strings.HasSuffix(msg.Topic(), "STATE") {
+		d.unmarshalPayload(msg.Payload())
 	}
 }
 
@@ -62,6 +63,6 @@ func (d *Device) GetStatusNet() {
 	d.mqttClient.Publish(status, 1, false, "5")
 }
 
-func (d *Device) decodeStatusNet(payload []byte) {
+func (d *Device) unmarshalPayload(payload []byte) {
 	json.Unmarshal(payload, d)
 }

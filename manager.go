@@ -19,14 +19,13 @@ type Manager struct {
 	MQTTclient        mqtt.Client
 	devices           map[string]*Device
 	topics            []string
-	myCounter         int
+	timezone          string
 }
 
 // NewManager will create a new Manager with mqtt options from mqttClientOptions parameter
 func NewManager(mqttClientOptions mqtt.ClientOptions) *Manager {
 	o := &Manager{
 		MQTTClientOptions: mqttClientOptions,
-		myCounter:         1,
 		topics:            []string{"%prefix%/%topic%/"},
 		devices:           make(map[string]*Device),
 	}
@@ -35,7 +34,11 @@ func NewManager(mqttClientOptions mqtt.ClientOptions) *Manager {
 	return o
 }
 
-func (m Manager) IsConnected() bool {
+func (m *Manager) SetTimezone(timezone string) {
+	m.timezone = timezone
+}
+
+func (m *Manager) IsConnected() bool {
 	return m.MQTTclient.IsConnected()
 }
 
@@ -67,7 +70,7 @@ func (m *Manager) ReConnect() {
 }
 
 func (m *Manager) MessageHandler(client mqtt.Client, msg mqtt.Message) {
-	fmt.Printf("%d %s: %s\n", m.myCounter, msg.Topic(), msg.Payload())
+	fmt.Printf("%s: %s\n", msg.Topic(), msg.Payload())
 	if strings.HasSuffix(msg.Topic(), "LWT") {
 		if fullTopic, ok := findFullTopic(m.topics, msg.Topic()); ok {
 			topic := getTopic(fullTopic, msg.Topic())
@@ -78,7 +81,6 @@ func (m *Manager) MessageHandler(client mqtt.Client, msg mqtt.Message) {
 		}
 	}
 
-	m.myCounter++
 }
 
 func (m *Manager) GetDevices() map[string]*Device {
