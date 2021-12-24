@@ -3,4 +3,3 @@
 host: tcp://mqtt.example.com:1883
 username: username
 password: password
-timezone: "Africa/Johannesburg"

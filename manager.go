@@ -19,7 +19,6 @@ type Manager struct {
 	MQTTclient        mqtt.Client
 	devices           map[string]*Device
 	topics            []string
-	timezone          string
 }
 
 // NewManager will create a new Manager with mqtt options from mqttClientOptions parameter
@@ -32,10 +31,6 @@ func NewManager(mqttClientOptions mqtt.ClientOptions) *Manager {
 	o.MQTTclient = mqtt.NewClient(&o.MQTTClientOptions)
 	o.Connect()
 	return o
-}
-
-func (m *Manager) SetTimezone(timezone string) {
-	m.timezone = timezone
 }
 
 func (m *Manager) IsConnected() bool {

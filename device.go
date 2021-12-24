@@ -3,7 +3,9 @@ package tasmota
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"strings"
+	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
@@ -25,8 +27,10 @@ type Device struct {
 	fullTopic  string
 	mqttClient mqtt.Client
 	online     bool
-	StatusNet  statusNet `json:"StatusNET"`
-	Uptime     string    `json:"Uptime"`
+	StatusNet  statusNet  `json:"StatusNET"`
+	Uptime     *time.Time `json:"Uptime"`
+	LoadAvg    int        `json:"LoadAvg"`
+	Timezone   string     `json:"Timezone"`
 }
 
 // NewDevice will create a new Device
@@ -35,6 +39,7 @@ func NewDevice(topic, fullTopic string, mqttClient mqtt.Client) *Device {
 		topic:      topic,
 		fullTopic:  fullTopic,
 		mqttClient: mqttClient,
+		Uptime:     &time.Time{},
 	}
 	subscribeTopics := make(map[string]byte)
 	for _, t := range []string{"tele", "stat"} {
@@ -49,20 +54,24 @@ func (d *Device) MessageHandler(client mqtt.Client, msg mqtt.Message) {
 	if strings.HasSuffix(msg.Topic(), "LWT") {
 		if string(msg.Payload()) == "Online" {
 			d.online = true
-			d.GetStatusNet()
+			d.SendCmnd("STATUS", "5")
+			d.SendCmnd("TIMEZONE", "")
 		} else {
 			d.online = false
 		}
-	} else if strings.HasSuffix(msg.Topic(), "STATUS5") || strings.HasSuffix(msg.Topic(), "STATE") {
+	} else if strings.HasSuffix(msg.Topic(), "STATUS5") || strings.HasSuffix(msg.Topic(), "STATE") || strings.HasSuffix(msg.Topic(), "RESULT") {
 		d.unmarshalPayload(msg.Payload())
 	}
 }
 
-func (d *Device) GetStatusNet() {
-	status := strings.Replace(strings.Replace(d.fullTopic, "%prefix%", "cmnd", 1), "%topic%", d.topic, 1) + "STATUS"
-	d.mqttClient.Publish(status, 1, false, "5")
+func (d *Device) SendCmnd(cmnd string, payload string) {
+	mqttTopic := strings.Replace(strings.Replace(d.fullTopic, "%prefix%", "cmnd", 1), "%topic%", d.topic, 1) + cmnd
+	d.mqttClient.Publish(mqttTopic, 1, false, payload)
 }
 
 func (d *Device) unmarshalPayload(payload []byte) {
-	json.Unmarshal(payload, d)
+	// Append timezone to all date time strings
+	r := regexp.MustCompile(`"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})"`)
+	repl := r.ReplaceAllString(string(payload), `$1`+d.Timezone)
+	json.Unmarshal([]byte(repl), d)
 }

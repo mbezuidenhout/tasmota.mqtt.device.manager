@@ -16,7 +16,6 @@ type Config struct {
 	Host     string `yaml:"host"`
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
-	Timezone string `yaml:"timezone"`
 }
 
 func NewConfig(configPath string) (*Config, error) {
@@ -48,8 +47,6 @@ func main() {
 	mqttClientOptions.SetClientID("TMDM_DEV")
 
 	m := tasmota.NewManager(*mqttClientOptions)
-
-	tasmota.SetTimezone(config.Timezone)
 
 	if m.MQTTclient.IsConnected() {
 		fmt.Println("MQTT is connected")
