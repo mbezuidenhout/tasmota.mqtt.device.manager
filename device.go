@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
-	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
@@ -27,10 +26,10 @@ type Device struct {
 	fullTopic  string
 	mqttClient mqtt.Client
 	online     bool
-	StatusNet  statusNet  `json:"StatusNET"`
-	Uptime     *time.Time `json:"Uptime"`
-	LoadAvg    int        `json:"LoadAvg"`
-	Timezone   string     `json:"Timezone"`
+	UptimeSec  uint      `json:"UptimeSec"`
+	LoadAvg    uint      `json:"LoadAvg"`
+	Timezone   string    `json:"Timezone"`
+	StatusNet  statusNet `json:"StatusNET"`
 }
 
 // NewDevice will create a new Device
@@ -39,7 +38,6 @@ func NewDevice(topic, fullTopic string, mqttClient mqtt.Client) *Device {
 		topic:      topic,
 		fullTopic:  fullTopic,
 		mqttClient: mqttClient,
-		Uptime:     &time.Time{},
 	}
 	subscribeTopics := make(map[string]byte)
 	for _, t := range []string{"tele", "stat"} {
@@ -69,9 +67,9 @@ func (d *Device) SendCmnd(cmnd string, payload string) {
 	d.mqttClient.Publish(mqttTopic, 1, false, payload)
 }
 
-func (d *Device) unmarshalPayload(payload []byte) {
+func (d *Device) unmarshalPayload(payload []byte) error {
 	// Append timezone to all date time strings
-	r := regexp.MustCompile(`"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})"`)
-	repl := r.ReplaceAllString(string(payload), `$1`+d.Timezone)
-	json.Unmarshal([]byte(repl), d)
+	r1 := regexp.MustCompile(`"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})"`)
+	repl := r1.ReplaceAllString(string(payload), `"$1`+d.Timezone+`"`)
+	return json.Unmarshal([]byte(repl), &d)
 }
