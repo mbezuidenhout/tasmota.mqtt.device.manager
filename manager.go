@@ -79,7 +79,11 @@ func (m *Manager) MessageHandler(client mqtt.Client, msg mqtt.Message) {
 }
 
 func (m *Manager) GetDevices() map[string]*Device {
-	return m.devices
+	if len(m.devices) == 0 {
+		return nil
+	} else {
+		return m.devices
+	}
 }
 
 func getTopic(fullTopic string, topic string) string {
