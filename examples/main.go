@@ -13,9 +13,10 @@ import (
 )
 
 type Config struct {
-	Host     string `yaml:"host"`
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
+	Host        string `yaml:"host"`
+	Username    string `yaml:"username"`
+	Password    string `yaml:"password"`
+	Customtopic string `yaml:"customtopic"`
 }
 
 func NewConfig(configPath string) (*Config, error) {
@@ -47,6 +48,9 @@ func main() {
 	mqttClientOptions.SetClientID("TMDM_DEV")
 
 	m := tasmota.NewManager(*mqttClientOptions)
+	m.Disconnect()
+	m.AddTopic(config.Customtopic)
+	m.Connect()
 
 	if m.MQTTclient.IsConnected() {
 		fmt.Println("MQTT is connected")

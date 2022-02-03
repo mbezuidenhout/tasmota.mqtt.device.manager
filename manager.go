@@ -86,6 +86,10 @@ func (m *Manager) GetDevices() map[string]*Device {
 	}
 }
 
+func (m *Manager) AddTopic(fullTopic string) {
+	m.topics = append(m.topics, fullTopic)
+}
+
 func getTopic(fullTopic string, topic string) string {
 	regexString := strings.Replace(strings.Replace(fullTopic, "%prefix%", "(?P<prefix>.*?)", 1), "%topic%", "(?P<topic>.*?)", 1) + ".*$"
 	myExp := regexp.MustCompile(regexString)
