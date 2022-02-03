@@ -48,7 +48,6 @@ func main() {
 	mqttClientOptions.SetClientID("TMDM_DEV")
 
 	m := tasmota.NewManager(*mqttClientOptions)
-	m.Disconnect()
 	m.AddTopic(config.Customtopic)
 	m.Connect()
 

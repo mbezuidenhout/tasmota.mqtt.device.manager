@@ -29,7 +29,6 @@ func NewManager(mqttClientOptions mqtt.ClientOptions) *Manager {
 		devices:           make(map[string]*Device),
 	}
 	o.MQTTclient = mqtt.NewClient(&o.MQTTClientOptions)
-	o.Connect()
 	return o
 }
 
