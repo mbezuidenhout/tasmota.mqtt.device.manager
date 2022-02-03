@@ -31,10 +31,11 @@ func (d *Device) MessageHandler(client mqtt.Client, msg mqtt.Message) {
 			d.Online = true
 			d.SendCmnd("STATUS", "5")
 			d.SendCmnd("TIMEZONE", "")
+			d.SendCmnd("STATUS", "2")
 		} else {
 			d.Online = false
 		}
-	} else if strings.HasSuffix(msg.Topic(), "STATUS5") || strings.HasSuffix(msg.Topic(), "STATE") || strings.HasSuffix(msg.Topic(), "RESULT") {
+	} else if strings.HasSuffix(msg.Topic(), "STATUS5") || strings.HasSuffix(msg.Topic(), "STATUS2") || strings.HasSuffix(msg.Topic(), "STATE") || strings.HasSuffix(msg.Topic(), "RESULT") {
 		err := d.unmarshalPayload(msg.Payload())
 		if err != nil {
 			fmt.Println(err)

@@ -19,8 +19,9 @@ type Device struct {
 	// Device status
 	Online     bool `json:"Online"`
 	mqttClient mqtt.Client
-	UptimeSec  uint    `json:"UptimeSec,omitempty"`
-	LoadAvg    uint    `json:"LoadAvg,omitempty"`
-	Timezone   string  `json:"Timezone,omitempty"`
-	Network    Network `json:"StatusNET,omitempty"`
+	UptimeSec  uint     `json:"UptimeSec,omitempty"`
+	LoadAvg    uint     `json:"LoadAvg,omitempty"`
+	Timezone   string   `json:"Timezone,omitempty"`
+	Network    Network  `json:"StatusNET,omitempty"`
+	Firmware   Firmware `json:"StatusFWR,omitempty"`
 }
