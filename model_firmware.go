@@ -14,4 +14,5 @@ type Firmware struct {
 	BuildDateTime string `json:"BuildDateTime"`
 	Boot          int    `json:"Boot"`
 	Hardware      string `json:"Hardware"`
+	CpuFrequency  int    `json:"CpuFrequency"`
 }

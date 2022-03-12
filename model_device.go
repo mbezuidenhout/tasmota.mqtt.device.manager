@@ -9,19 +9,23 @@
  */
 package tasmota
 
-import mqtt "github.com/eclipse/paho.mqtt.golang"
+import (
+	mqtt "github.com/eclipse/paho.mqtt.golang"
+)
 
 type Device struct {
 	// Unique device topic
 	Topic string `json:"Topic"`
 	// Full topic format
 	Fulltopic string `json:"FullTopic"`
+	Name      string `json:"DeviceName"`
+	Module    string `json:"Module"`
 	// Device status
-	Online     bool `json:"Online"`
-	mqttClient mqtt.Client
-	UptimeSec  uint     `json:"UptimeSec,omitempty"`
-	LoadAvg    uint     `json:"LoadAvg,omitempty"`
-	Timezone   string   `json:"Timezone,omitempty"`
-	Network    Network  `json:"StatusNET,omitempty"`
-	Firmware   Firmware `json:"StatusFWR,omitempty"`
+	Online     bool        `json:"Online"`
+	mqttClient mqtt.Client `json:"-"`
+	UptimeSec  uint        `json:"UptimeSec,omitempty"`
+	LoadAvg    uint        `json:"LoadAvg,omitempty"`
+	Timezone   string      `json:"Timezone,omitempty"`
+	Network    Network     `json:"StatusNET,omitempty"`
+	Firmware   Firmware    `json:"StatusFWR,omitempty"`
 }

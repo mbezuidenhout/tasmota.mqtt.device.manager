@@ -32,6 +32,8 @@ func (d *Device) MessageHandler(client mqtt.Client, msg mqtt.Message) {
 			d.SendCmnd("STATUS", "5")
 			d.SendCmnd("TIMEZONE", "")
 			d.SendCmnd("STATUS", "2")
+			d.SendCmnd("Module", "")
+			d.SendCmnd("DeviceName", "")
 		} else {
 			d.Online = false
 		}
@@ -52,5 +54,9 @@ func (d *Device) unmarshalPayload(payload []byte) error {
 	// Append timezone to all date time strings
 	r1 := regexp.MustCompile(`"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})"`)
 	repl := r1.ReplaceAllString(string(payload), `"$1`+d.Timezone+`"`)
+
+	// Change module string to only have the name.
+	r2 := regexp.MustCompile(`{\"Module\":{\"\d+\":\"([^"]+)\"}}`)
+	repl = r2.ReplaceAllString(string(repl), `{"Module":"$1"}`)
 	return json.Unmarshal([]byte(repl), &d)
 }

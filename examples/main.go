@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/signal"
@@ -64,6 +65,10 @@ func main() {
 			case <-ticker.C:
 				devices := m.GetDevices()
 				fmt.Printf("There are now %d devices online", len(devices))
+				for key, element := range devices {
+					jsonString, _ := json.Marshal(element)
+					fmt.Println("Device %s, %s", key, jsonString)
+				}
 			case <-quit:
 				ticker.Stop()
 				return
