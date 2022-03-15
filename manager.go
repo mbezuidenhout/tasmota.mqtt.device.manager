@@ -85,6 +85,14 @@ func (m *Manager) GetDevices() map[string]*Device {
 	}
 }
 
+func (m *Manager) GetDevice(topic string) *Device {
+	if device, ok := m.devices[topic]; ok {
+		return device
+	} else {
+		return nil
+	}
+}
+
 func (m *Manager) AddTopic(fullTopic string) {
 	m.topics = append(m.topics, fullTopic)
 }

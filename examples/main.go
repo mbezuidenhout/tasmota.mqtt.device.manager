@@ -39,6 +39,16 @@ func NewConfig(configPath string) (*Config, error) {
 	return config, nil
 }
 
+func contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+
+	return false
+}
+
 func main() {
 	config, err := NewConfig("config.yml")
 	if err != nil {
@@ -64,11 +74,39 @@ func main() {
 			select {
 			case <-ticker.C:
 				devices := m.GetDevices()
-				fmt.Printf("There are now %d devices online", len(devices))
-				for key, element := range devices {
-					jsonString, _ := json.Marshal(element)
-					fmt.Println("Device %s, %s", key, jsonString)
+				fmt.Printf("There are now %d devices online\n", len(devices))
+				//device := m.GetDevice("vUgXsBk2vv")
+				var device *tasmota.Device
+				for key := range devices {
+					device = m.GetDevice(key)
+					break
 				}
+				if device != nil {
+					//fmt.Printf("Device %s exists", device.Name)
+					sensorTypes := device.GetSensorTypes()
+					var msg = ""
+					if len(sensorTypes) == 1 {
+						msg = "There is %d type sensor attached to %s"
+					} else {
+						msg = "There are %d type sensors attached to %s"
+					}
+					fmt.Printf(msg+"\n", len(sensorTypes), device.Name)
+					if _, ok := device.Sensors["Zigbee"]; ok {
+						zigbee := device.GetSensor("Zigbee")
+						json, _ := json.Marshal(zigbee)
+						fmt.Printf("Zigbee data: %s\n", json)
+					}
+					//if contains(sensorTypes, "Zigbee") {
+					//	zigbeeJsonString, _ := json.Marshal(device.GetSensor("Zigbee"))
+					//	fmt.Printf("Zigbee data: %s", zigbeeJsonString)
+					//}
+				}
+				/*
+					for key, element := range devices {
+						jsonString, _ := json.Marshal(element)
+						fmt.Println("Device %s, %s", key, jsonString)
+					}
+				*/
 			case <-quit:
 				ticker.Stop()
 				return

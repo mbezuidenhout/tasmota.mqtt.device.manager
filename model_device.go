@@ -28,4 +28,5 @@ type Device struct {
 	Timezone   string      `json:"Timezone,omitempty"`
 	Network    Network     `json:"StatusNET,omitempty"`
 	Firmware   Firmware    `json:"StatusFWR,omitempty"`
+	Sensors    map[string]map[string]interface{}
 }
