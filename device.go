@@ -45,6 +45,12 @@ func (d *Device) MessageHandler(client mqtt.Client, msg mqtt.Message) {
 		if err != nil {
 			fmt.Println(err)
 		}
+		// Get Zigbee info if firmware is zbbridge
+		if strings.HasSuffix(msg.Topic(), "STATUS2") && strings.Contains(string(msg.Payload()), "(zbbridge)") {
+			if _, ok := d.Sensors["Zigbee"]; !ok {
+				d.SendCmnd("ZbInfo", "")
+			}
+		}
 	} else if strings.HasSuffix(msg.Topic(), "SENSOR") {
 		err := d.unmarshalSensorPayload(msg.Payload())
 		if err != nil {
@@ -70,25 +76,6 @@ func (d *Device) unmarshalDevicePayload(payload []byte) error {
 	return json.Unmarshal([]byte(repl), &d)
 }
 
-func (d *Device) unmarshalSensorPayload(payload []byte) error {
-	r3 := regexp.MustCompile(`{\"ZbInfo\":{\"([x0-9A-F]+)\":(.*)}}`)
-	matches := r3.FindAllStringSubmatch(string(payload), -1)
-	if len(matches) == 1 && len(matches[0]) == 3 {
-		if len(d.Sensors["Zigbee"]) == 0 {
-			d.Sensors["Zigbee"] = make(map[string]interface{})
-		}
-		x := ZigbeeTH01{}
-		err := json.Unmarshal([]byte(matches[0][2]), &x)
-		if err == nil {
-			d.Sensors["Zigbee"][matches[0][1]] = x
-		}
-		return err
-	} else {
-		return nil
-	}
-
-}
-
 func (d *Device) SetName(name string) {
 	fmt.Printf("Setting device %s name to %s\n", d.Topic, name)
 	d.SendCmnd("DeviceName", name)
@@ -97,16 +84,4 @@ func (d *Device) SetName(name string) {
 func (d *Device) SetTimezone(timezone int) {
 	fmt.Printf("Setting device %s timezone to %d\n", d.Topic, timezone)
 	d.SendCmnd("DeviceName", strconv.Itoa(timezone))
-}
-
-func (d *Device) GetSensorTypes() []string {
-	var keys = []string{}
-	for k := range d.Sensors {
-		keys = append(keys, k)
-	}
-	return keys
-}
-
-func (d *Device) GetSensor(sensorType string) map[string]interface{} {
-	return d.Sensors[sensorType]
 }

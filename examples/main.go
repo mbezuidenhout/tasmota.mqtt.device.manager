@@ -10,7 +10,7 @@ import (
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/mbezuidenhout/tasmota.mqtt.device.manager/v2"
-	"gopkg.in/yaml.v3"
+	yaml "gopkg.in/yaml.v3"
 )
 
 type Config struct {
@@ -37,16 +37,6 @@ func NewConfig(configPath string) (*Config, error) {
 	}
 
 	return config, nil
-}
-
-func contains(s []string, str string) bool {
-	for _, v := range s {
-		if v == str {
-			return true
-		}
-	}
-
-	return false
 }
 
 func main() {
@@ -98,17 +88,7 @@ func main() {
 						json, _ := json.Marshal(zigbee)
 						fmt.Printf("Zigbee data: %s\n", json)
 					}
-					//if contains(sensorTypes, "Zigbee") {
-					//	zigbeeJsonString, _ := json.Marshal(device.GetSensor("Zigbee"))
-					//	fmt.Printf("Zigbee data: %s", zigbeeJsonString)
-					//}
 				}
-				/*
-					for key, element := range devices {
-						jsonString, _ := json.Marshal(element)
-						fmt.Println("Device %s, %s", key, jsonString)
-					}
-				*/
 			case <-quit:
 				ticker.Stop()
 				return
