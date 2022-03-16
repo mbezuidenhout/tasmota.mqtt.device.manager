@@ -28,5 +28,9 @@ type Device struct {
 	Timezone   string      `json:"Timezone,omitempty"`
 	Network    Network     `json:"StatusNET,omitempty"`
 	Firmware   Firmware    `json:"StatusFWR,omitempty"`
-	Sensors    map[string]map[string]interface{}
+	// Sensors are first added to a group and then by name or number.
+	// If you have multiple Si7021 temperature sensors they should be like
+	// Sensors["Si7021"]["0"] = {"Temperature": 10.0 }
+	// Sensors["Si7021"]["1"] = {"Temperature": 12.3 }
+	Sensors map[string]map[string]interface{} `json:"-"`
 }

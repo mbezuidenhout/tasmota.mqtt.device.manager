@@ -18,7 +18,7 @@ func NewDevice(topic, fullTopic string, mqttClient mqtt.Client) *Device {
 		mqttClient: mqttClient,
 	}
 	subscribeTopics := make(map[string]byte)
-	// Limit number of different sensors to 32
+
 	o.Sensors = make(map[string]map[string]interface{})
 	for _, t := range []string{"tele", "stat"} {
 		subscribeTopics[strings.Replace(strings.Replace(fullTopic, "%prefix%", t, 1), "%topic%", topic, 1)+"+"] = 0

@@ -79,6 +79,8 @@ func main() {
 				var device *tasmota.Device
 				for key := range devices {
 					device = m.GetDevice(key)
+					jsonstr, _ := json.Marshal(device)
+					fmt.Println(string(jsonstr))
 					break
 				}
 				if device != nil {
