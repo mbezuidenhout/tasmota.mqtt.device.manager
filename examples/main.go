@@ -69,24 +69,23 @@ func main() {
 				var device *tasmota.Device
 				for key := range devices {
 					device = m.GetDevice(key)
-					jsonstr, _ := json.Marshal(device)
-					fmt.Println(string(jsonstr))
-					break
-				}
-				if device != nil {
-					//fmt.Printf("Device %s exists", device.Name)
-					sensorTypes := device.GetSensorTypes()
-					var msg = ""
-					if len(sensorTypes) == 1 {
-						msg = "There is %d type sensor attached to %s"
-					} else {
-						msg = "There are %d type sensors attached to %s"
-					}
-					fmt.Printf(msg+"\n", len(sensorTypes), device.Name)
-					if _, ok := device.Sensors["Zigbee"]; ok {
-						zigbee := device.GetSensor("Zigbee")
-						json, _ := json.Marshal(zigbee)
-						fmt.Printf("Zigbee data: %s\n", json)
+					//jsonstr, _ := json.Marshal(device)
+					//fmt.Println(string(jsonstr))
+					if device != nil {
+						//fmt.Printf("Device %s exists", device.Name)
+						sensorTypes := device.GetSensorTypes()
+						var msg = ""
+						if len(sensorTypes) == 1 {
+							msg = "There is %d type of sensor attached to %s"
+						} else {
+							msg = "There are %d type of sensors attached to %s"
+						}
+						fmt.Printf(msg+"\n", len(sensorTypes), device.Name)
+						if _, ok := device.Sensors["Zigbee"]; ok {
+							zigbee := device.GetSensor("Zigbee")
+							json, _ := json.Marshal(zigbee)
+							fmt.Printf("Zigbee data: %s\n", json)
+						}
 					}
 				}
 			case <-quit:

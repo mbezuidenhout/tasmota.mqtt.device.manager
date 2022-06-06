@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"regexp"
+	"time"
 )
 
 func (d *Device) unmarshalSensorPayload(payload []byte) error {
@@ -30,6 +31,7 @@ func (d *Device) unmarshalSensorPayload(payload []byte) error {
 		y := d.Sensors["Zigbee"][matches2[0][1]].(ZigbeeTH01)
 		err := json.Unmarshal([]byte(matches2[0][2]), &x)
 		y.LastSeen = 0
+		y.LastSeenEpoch = time.Now().UTC().Unix()
 		if x.Name != y.Name {
 			y.Name = x.Name
 		}

@@ -17,6 +17,7 @@ type ZigbeeTH01 struct {
 	Humidity          float32 `json:"Humidity,omitempty"`
 	BatteryPercentage int     `json:"BatteryPercentage,omitempty"`
 	LastSeen          int     `json:"LastSeen"`
+	LastSeenEpoch     int64   `json:"LastSeenEpoch"`
 	LinkQuality       int     `json:"LinkQuality"`
 	Reachable         bool    `json:"Reachable"`
 }
