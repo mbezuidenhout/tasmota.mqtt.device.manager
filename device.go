@@ -37,6 +37,7 @@ func (d *Device) MessageHandler(client mqtt.Client, msg mqtt.Message) {
 			d.SendCmnd("STATUS", "2")
 			d.SendCmnd("Module", "")
 			d.SendCmnd("DeviceName", "")
+			d.SendCmnd("STATE", "")
 		} else {
 			d.Online = false
 		}

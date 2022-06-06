@@ -26,6 +26,7 @@ type Device struct {
 	UptimeSec  uint        `json:"UptimeSec,omitempty"`
 	LoadAvg    uint        `json:"LoadAvg,omitempty"`
 	Timezone   string      `json:"Timezone,omitempty"`
+	Wifi       Wifi        `json:"Wifi,omitempty"`
 	Network    Network     `json:"StatusNET,omitempty"`
 	Firmware   Firmware    `json:"StatusFWR,omitempty"`
 	// Sensors are first added to a group and then by name or number.

@@ -11,7 +11,7 @@ package tasmota
 
 type ZigbeeTH01 struct {
 	Device            string  `json:"Device"`
-	Name              string  `json:"Name"`
+	Name              string  `json:"Name,omitempty"`
 	ModelId           string  `json:"ModelId"`
 	Temperature       float32 `json:"Temperature,omitempty"`
 	Humidity          float32 `json:"Humidity,omitempty"`
