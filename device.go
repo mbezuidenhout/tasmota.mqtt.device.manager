@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
@@ -33,10 +34,15 @@ func (d *Device) MessageHandler(client mqtt.Client, msg mqtt.Message) {
 		if string(msg.Payload()) == "Online" {
 			d.Online = true
 			d.SendCmnd("STATUS", "5")
+			time.Sleep(250 * time.Millisecond)
 			d.SendCmnd("TIMEZONE", "")
+			time.Sleep(250 * time.Millisecond)
 			d.SendCmnd("STATUS", "2")
+			time.Sleep(250 * time.Millisecond)
 			d.SendCmnd("Module", "")
+			time.Sleep(250 * time.Millisecond)
 			d.SendCmnd("DeviceName", "")
+			time.Sleep(250 * time.Millisecond)
 			d.SendCmnd("STATE", "")
 		} else {
 			d.Online = false

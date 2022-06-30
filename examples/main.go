@@ -45,6 +45,7 @@ func main() {
 		return
 	}
 	mqttClientOptions := mqtt.NewClientOptions()
+	mqttClientOptions.AutoReconnect = true
 	mqttClientOptions.SetUsername(config.Username).SetPassword(config.Password).AddBroker(config.Host)
 	mqttClientOptions.SetClientID("TMDM_DEV")
 
@@ -64,7 +65,7 @@ func main() {
 			select {
 			case <-ticker.C:
 				devices := m.GetDevices()
-				fmt.Printf("There are now %d devices online\n", len(devices))
+				fmt.Printf("There are now %d devices found\n", len(devices))
 				//device := m.GetDevice("vUgXsBk2vv")
 				var device *tasmota.Device
 				for key := range devices {
@@ -80,11 +81,15 @@ func main() {
 						} else {
 							msg = "There are %d type of sensors attached to %s"
 						}
-						fmt.Printf(msg+"\n", len(sensorTypes), device.Name)
-						if _, ok := device.Sensors["Zigbee"]; ok {
-							zigbee := device.GetSensor("Zigbee")
-							json, _ := json.Marshal(zigbee)
-							fmt.Printf("Zigbee data: %s\n", json)
+						if device.Online {
+							fmt.Printf(msg+"\n", len(sensorTypes), device.Topic)
+							if _, ok := device.Sensors["Zigbee"]; ok {
+								zigbee := device.GetSensor("Zigbee")
+								json, _ := json.Marshal(zigbee)
+								fmt.Printf("Zigbee data: %s\n", json)
+							}
+						} else {
+							fmt.Printf("%s is offline \n", device.Topic)
 						}
 					}
 				}

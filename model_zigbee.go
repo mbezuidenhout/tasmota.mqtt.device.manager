@@ -13,6 +13,8 @@ type ZigbeeTH01 struct {
 	Device            string  `json:"Device"`
 	Name              string  `json:"Name,omitempty"`
 	ModelId           string  `json:"ModelId"`
+	IEEEAddr          string  `json:"IEEEAddr"`
+	Manufacturer      string  `json:"Manufacturer"`
 	Temperature       float32 `json:"Temperature,omitempty"`
 	Humidity          float32 `json:"Humidity,omitempty"`
 	BatteryPercentage int     `json:"BatteryPercentage,omitempty"`
@@ -20,4 +22,46 @@ type ZigbeeTH01 struct {
 	LastSeenEpoch     int64   `json:"LastSeenEpoch"`
 	LinkQuality       int     `json:"LinkQuality"`
 	Reachable         bool    `json:"Reachable"`
+}
+
+type ZigbeeDS01 struct {
+	Device            string `json:"Device"`
+	Name              string `json:"Name,omitempty"`
+	ModelId           string `json:"ModelId"`
+	IEEEAddr          string `json:"IEEEAddr"`
+	Manufacturer      string `json:"Manufacturer"`
+	BatteryPercentage int    `json:"BatteryPercentage,omitempty"`
+	LastSeen          int    `json:"LastSeen"`
+	LastSeenEpoch     int64  `json:"LastSeenEpoch"`
+	LinkQuality       int    `json:"LinkQuality"`
+	Reachable         bool   `json:"Reachable"`
+	Contact           int
+}
+
+type ZigbeeWB01 struct {
+	Device            string `json:"Device"`
+	Name              string `json:"Name,omitempty"`
+	ModelId           string `json:"ModelId"`
+	IEEEAddr          string `json:"IEEEAddr"`
+	Manufacturer      string `json:"Manufacturer"`
+	BatteryPercentage int    `json:"BatteryPercentage,omitempty"`
+	LastSeen          int    `json:"LastSeen"`
+	LastSeenEpoch     int64  `json:"LastSeenEpoch"`
+	LinkQuality       int    `json:"LinkQuality"`
+	Reachable         bool   `json:"Reachable"`
+	Power             int
+}
+
+type ZigbeeMS01 struct {
+	Device            string `json:"Device"`
+	Name              string `json:"Name,omitempty"`
+	ModelId           string `json:"ModelId"`
+	IEEEAddr          string `json:"IEEEAddr"`
+	Manufacturer      string `json:"Manufacturer"`
+	BatteryPercentage int    `json:"BatteryPercentage,omitempty"`
+	LastSeen          int    `json:"LastSeen"`
+	LastSeenEpoch     int64  `json:"LastSeenEpoch"`
+	LinkQuality       int    `json:"LinkQuality"`
+	Reachable         bool   `json:"Reachable"`
+	Occupancy         int
 }
